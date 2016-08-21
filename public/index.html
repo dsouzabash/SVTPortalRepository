@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="svt">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/SVT_favicon.jpg">
+	<style>
+		.selected {
+			background-color:black;
+			color:white;
+			font-weight:bold;
+		}
+		.ngViewport.ng-scope{
+			height: auto !important;
+			overflow-y: hidden;
+		}
+
+		.ngTopPanel.ng-scope, .ngHeaderContainer{
+			width: auto !important;
+		}
+	</style>
+    <title>Sun Valley Tech Solutions</title>
+
+	<!-- Angular JS -->
+	<!-- <script type="text/javascript" src="js/angular.min.js"></script> -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0-rc.1/angular.min.js"></script>
+	<script src="https:////ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular-animate.js"></script>
+	<script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.1.1.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui/0.4.0/angular-ui.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-datepicker.min.js"></script>
+	<!--<script src="js/moment.js"></script>-->
+	<!--<script src="js/daterangepicker.js"></script>-->
+		
+	<!-- Custom JS-->
+	<script type="text/javascript" src="js/app.js"></script>
+	<script type="text/javascript" src="js/autoFillController.js"></script>
+	<script type="text/javascript" src="js/resourceAdmin.js"></script>
+	<script type="text/javascript" src="js/billTypeController.js"></script>
+	<script type="text/javascript" src="js/travelTypeController.js"></script>
+	<script type="text/javascript" src="js/appController.js"></script>
+	
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	
+	<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/index.css" rel="stylesheet">
+	
+	<!-- Switch -->
+	<link href="css/bootstrap-switch.css" rel="stylesheet">
+	<script src="js/bootstrap-switch.js"></script>
+	
+	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	<!-- Include Bootstrap Datepicker -->
+	<link rel="stylesheet" href="css/datepicker.min.css" />
+	<!--<link rel="stylesheet" href="css/datepicker3.min.css" />-->
+	<!--<link rel="stylesheet" href="css/daterangepicker.css" />-->
+	
+	<link rel="stylesheet" href="css/customCss.css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+		  <img src="images/SVT.jpg" class="img-rounded" width="80" height="30">
+          <label class="navbar-brand">Sun Valley Tech Solutions Resource Management Portal</label>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row" ng-controller="navController as navCtrl">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li ng-class="{active:navCtrl.isSelected('dashboard')}">
+				<a href="#dashboard" ng-click="navCtrl.selectTab('dashboard')">Dashboard <span class="sr-only">(current)</span></a>
+			</li>
+            <li ng-class="{active:navCtrl.isSelected('viewSchedule')}">
+				<a href="#viewSchedule" ng-click="navCtrl.selectTab('viewSchedule')">View Schedule</a>
+			</li>
+            <li ng-class="{active:navCtrl.isSelected('scheduleRequest')}">
+				<a href="#scheduleRequest" ng-click="navCtrl.selectTab('scheduleRequest')">Schedule Request</a>
+			</li>
+            <!--<li ng-class="{active:navCtrl.isSelected('massAssign')}">
+				<a href="#massAssign" ng-click="navCtrl.selectTab('massAssign')">Mass Assign</a>
+			</li>-->
+			<li ng-class="{active:navCtrl.isSelected('admin')}">
+				<a id="SubMenu1" href="#adminOptions" ng-click="navCtrl.selectTab('admin')" data-toggle="collapse">Admin <i class="fa fa-caret-down"></i></a>
+			</li>
+				<div class="collapse" id="adminOptions">
+					<a href="#AppSubMenu" class="list-group-item" data-toggle="collapse" data-parent="#SubMenu1">Applications<i class="fa fa-caret-down"></i></a>
+					<div class="collapse list-group-submenu" id="AppSubMenu">
+						<ul>
+							<li ng-class="{active:navCtrl.isSelected('newApp')}">
+								<a href="#createNewApp" class="list-group-item" data-parent="#SubMenu1" ng-click="navCtrl.selectTab('newApp')">Create New</a>
+							</li>
+							<li ng-class="{active:navCtrl.isSelected('modifyApp')}">
+								<a href="#modifyApp" class="list-group-item" data-parent="#SubMenu1" ng-click="navCtrl.selectTab('modifyApp')">Modify Existing</a>
+							</li>
+						</ul>
+					</div>
+					<a href="#ResSubMenu" class="list-group-item" data-toggle="collapse" data-parent="#SubMenu1">Resources<i class="fa fa-caret-down"></i></a>
+					<div class="collapse list-group-submenu" id="ResSubMenu">
+						<ul>
+							<li ng-class="{active:navCtrl.isSelected('newResource')}">
+							<a href="#createNewResource" class="list-group-item" data-parent="#SubMenu1" ng-click="navCtrl.selectTab('newResource')">Create New</a></li>
+							<li ng-class="{active:navCtrl.isSelected('modifyResource')}" ng-click="navCtrl.selectTab('modifyResource')">
+							<a href="#modifyResource" class="list-group-item" data-parent="#SubMenu1">Modify Existing</a></li>
+						</ul>
+					</div>
+					<a href="#createNewTravel" class="list-group-item" data-parent="#SubMenu1" ng-class="{active:navCtrl.isSelected('newTravel')}" ng-click="navCtrl.selectTab('newTravel')">Travel</a>
+					<a href="#createNewBill" class="list-group-item" data-parent="#SubMenu1" ng-class="{active:navCtrl.isSelected('newBill')}" ng-click="navCtrl.selectTab('newBill')">Billable Types</a>
+				</div>
+			</ul>
+		  <div ng-show="navCtrl.isSelected('viewSchedule')">
+		  <label for='filterBy'> Filter By </label>
+			<form name="filterForm" ng-controller="resourceController as resourceCtrl">
+				<div class="btn-group form-group">
+					<div class="btn-group">
+						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('BeforeStartDate')">
+						  <input type="radio" name="optradioStart" value="beforeStartDate"/>Before
+						</label>
+						<label class="radio-inline active" ng-click="resourceCtrl.selectRadio('OnStartDate')">
+						  <input type="radio" name="optradioStart" value="onStartDate" checked=""/>On
+						</label>
+						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('AfterStartDate')">
+						  <input type="radio" name="optradioStart" value="afterStartDate"/>After
+						</label>
+						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('BetweenStartDate')">
+						  <input type="radio" name="optradioStart" value="betweenStartDate"/>Between
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="date">
+						<div class="input-group input-append date" id="viewSched_startDate">
+							<input type="text" placeholder="Start Date" class="form-control" name="date" id='startDate' ng-model="resourceCtrl.startDate"/>
+							<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" ng-show="resourceCtrl.whatsChecked('BetweenStartDate')">
+					<div class="date">
+						<div class="input-group input-append date" id="viewSched_startDate_2">
+							<input type="text" placeholder="Start Date" class="form-control" name="date" id='startDate_2' ng-model="resourceCtrl.startDate_2"/>
+							<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+				</div>
+				<div class="btn-group form-group">
+					<div class="btn-group">
+						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('BeforeEndDate')">
+						  <input type="radio" name="optradioEnd" value="beforeEndDate"/>Before
+						</label>
+						<label class="radio-inline active" ng-click="resourceCtrl.selectRadio('OnEndDate')">
+						  <input type="radio" name="optradioEnd" value="onEndDate" checked=""/>On
+						</label>
+						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('AfterEndDate')">
+						  <input type="radio" name="optradioEnd" value="afterEndDate"/>After
+						</label>
+						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('BetweenEndDate')">
+						  <input type="radio" name="optradioEnd" value="betweenEndDate"/>Between
+						</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="date">
+						<div class="input-group input-append date" id="viewSched_endDate">
+							<input type="text" placeholder="End Date" class="form-control" name="date" id='endDate' ng-model="resourceCtrl.endDate" />
+							<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+				</div>
+				<div class="form-group" ng-show="resourceCtrl.whatsChecked('BetweenEndDate')">
+					<div class="date">
+						<div class="input-group input-append date" id="viewSched_endDate_2">
+							<input type="text" placeholder="End Date" class="form-control" name="date" id='endDate_2' ng-model="resourceCtrl.endDate_2"/>
+							<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 form-group">
+					<!--<input type="submit" id= "filter" value = "Filter" class ="btn btn-default" />-->
+					<button type="submit" id= "filter" class="btn btn-default" aria-label="Filter">
+					  <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+					</button>
+				</div>
+				<div class="col-xs-6 form-group">
+					<button type="submit" id= "reset" class="btn btn-default" aria-label="Reset">
+					  <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+					</button>
+				</div>
+				<div id="filterLoading" class="loading" style="display: none;">
+					<img src="images\SVT_gif.gif" alt="SVTLoading" style="width:150px;height:50px;"/> Loading...
+				</div>
+				</form>
+				
+		  </div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('dashboard')">
+		  <h1 class="page-header">Dashboard</h1>
+		  <div ng-show="loading" class="loading">
+			<img src="images\SVT_gif.gif" alt="SVTLoading" style="width:150px;height:50px;" class="center-block"/> Loading...
+		  </div>
+		  <div ng-include = "'dash-board.html'">
+		  </div>
+        </div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('viewSchedule')">
+			<h1 class="page-header">View Schedule</h1>
+			<div ng-show="loading" class="loading">
+				<img src="images\SVT_gif.gif" alt="SVTLoading" style="width:150px;height:50px;" class="center-block"/> Loading...
+			</div>
+			<div ng-include = "'view-schedule.html'">
+			</div>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('scheduleRequest')">
+          <h1 class="page-header">Schedule Request</h1>
+		  <div class="row">
+			<div class="alert alert-success fade in" id="successMessageApplication" style="display: none;">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>Success!</strong> Project addedd successfully
+			</div>
+		</div>
+		  <form name="requestForm" ng-controller="RequestController as requestCtrl" ng-submit="requestForm.$valid && requestCtrl.addRequest()" novalidate>
+			<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="resourceName" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="name for name in names | filter:$viewValue | limitTo:8" class="form-control" placeholder="Resource Name" required />
+				</div>	
+				<div class="col-xs-3 form-group">
+					<input type="text" class="form-control" id="soNum" placeholder="SO Number" required/>
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="clientName" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="client for client in clients | filter:$viewValue | limitTo:8" class="form-control" placeholder="Client Name" required/>
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="projMgr" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="projMgr for projMgr in projMgrs | filter:$viewValue | limitTo:8" class="form-control" placeholder="Project Manager" required/>
+				</div>
+			</div>
+			<div class = "row">
+					<div class="col-xs-3 form-group">
+						<div class="date">
+							<div class="input-group input-append date">
+								<input type="text" placeholder="Start Date" class="form-control" id="schedule_startDate" name="date" required/>
+								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-3 form-group">
+						<div class="date">
+							<div class="input-group input-append date">
+								<input type="text" placeholder="End Date" class="form-control" id="schedule_endDate" name="date" required/>
+								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div class = "row">
+					<div class="col-xs-3 form-group">
+						<div class="date">
+							<div class="input-group input-append date">
+								<input type="text" placeholder="Start Date" class="form-control" id="schedule_startDate" name="date" required/>
+								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-3 form-group">
+						<div class="date">
+							<div class="input-group input-append date">
+								<input type="text" placeholder="End Date" class="form-control" id="schedule_endDate" name="date" required/>
+								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div class = "row">
+					<div class="col-xs-3 form-group">
+						<div class="date">
+							<div class="input-group input-append date">
+								<input type="text" placeholder="Start Date" class="form-control" id="schedule_startDate" name="date" required/>
+								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-3 form-group">
+						<div class="date">
+							<div class="input-group input-append date">
+								<input type="text" placeholder="End Date" class="form-control" id="schedule_endDate" name="date" required/>
+								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div class = "row">
+				<div class="col-xs-3 form-group">
+					<label for="duration">Duration: </label>
+					<label id="length"></label>
+				</div>
+			</div>
+			<div class = "row">
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="cityName" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="city for city in clientCity | filter:$viewValue" class="form-control" placeholder="City" required/>
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="stateName" type="text" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="state for state in clientState | filter:$viewValue" class="form-control" placeholder="State" required/>
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input type="text" class="form-control" id="zipNum" placeholder="Zip"/>
+				</div>
+				<div class="col-xs-3 form-group">
+					<label for="country">Country: US</label>
+				</div>
+			</div>
+			<div class = "row">
+				<div class="col-xs-3 form-group">
+					<label for="active">Active:</label>
+					<input type="checkbox" name="my-checkbox" checked />
+						<script>
+							$("[name='my-checkbox']").bootstrapSwitch();
+						</script>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="travelType" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="travel for travel in travelTypeList | filter:$viewValue" class="form-control" placeholder="Travel Type" />
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="billableRate" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="billRate for billRate in billabelRateList | filter:$viewValue" class="form-control" placeholder="Billable Rate" required/>
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="application" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="appList for appList in applicationList | filter:$viewValue" type="text" class="form-control" id="application" placeholder="Application" required/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 form-group">
+					<label for="notes">Notes:</label>
+					<textarea id="notes" ng-model="requestCtrl.request.notes" required></textarea>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 form-group">
+					<input type="submit" value = "Submit" class ="btn btn-default" />
+				</div>
+			</div>
+		  </div>
+		  </form>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('massAssign')">
+          <h1 class="page-header">Mass Assign</h1>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('admin')">
+          <h1 class="page-header">Admin Console</h1>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('newApp')">
+          <h1 class="page-header">Create a New Application</h1>
+		  <div ng-include = "'create-app.html'">
+		  </div>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('modifyApp')">
+          <h1 class="page-header">Modify Existing Applications</h1>
+		  <div ng-include="'modify-app.html'">
+		  </div>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('newResource')">
+          <h1 class="page-header">Create a New Resource</h1>
+		  <div ng-include = "'create-resource.html'">
+		  </div>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('modifyResource')">
+          <h1 class="page-header">Modify Existing Resources</h1>
+		  <div ng-include="'modify-resource.html'">
+		  </div>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('newTravel')">
+          <h1 class="page-header">Travel Types</h1>
+		  <div ng-include = "'travel-type.html'">
+		  </div>
+		</div>
+		<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('newBill')">
+          <h1 class="page-header">Create a Billable type</h1>
+		  <div ng-include = "'bill-type.html'">
+		  </div>
+		</div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

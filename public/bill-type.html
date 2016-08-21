@@ -1,0 +1,46 @@
+<div class="container-fluid">
+<div class="row">
+		<div class="alert alert-success fade in" id="successMessageBillRate" style="display: none;">
+			<a href="#" class="close" data-dismiss="alert">&times;</a>
+			<strong>Success!</strong> Bill Type addedd successfully
+		</div>
+	</div>
+	<div class="row">
+		<div class="alert alert-success fade in" id="successDeleteMessageBillRate" style="display: none;">
+			<a href="#" class="close" data-dismiss="alert">&times;</a>
+			<strong>Success!</strong> Bill Type deleted successfully
+		</div>
+	</div>
+			<div class="row">
+			  <form name="createBillForm" ng-controller="createBillController as createBillCtrl" ng-submit="createBillForm.$valid && createBillCtrl.createBill()" novalidate>
+				<div class="col-xs-3 form-group">
+					<input type="text" class="form-control" id="appName" ng-model="createBillCtrl.billTypeName" placeholder="Billable Type" />
+				</div>	
+				<div class="col-xs-3 form-group">
+					<input type="text" class="form-control" id="appVersion" ng-model="createBillCtrl.billRate" placeholder="Billable Rate" />
+				</div>
+				<div class="col-xs-6 form-group">
+					<input type="submit" value = "Create" class ="btn btn-default" />
+				</div>
+			  </form>
+		  </div>
+		  <div class="row">
+			<div class="table-responsive col-xs-3">
+				<table class="table table-striped" ng-controller="billTypeController as billCtrl" border='1'>
+					<thead>
+						<tr>
+							<th>Billable Type</th>
+							<th>Billable Rate</th>
+						</tr>
+					</thead>
+					<tbody ng-repeat="bill in billCtrl.bill">
+						<tr>
+							<td contenteditable='true'>{{bill.billTypeName}}</td>
+							<td contenteditable='true'>{{bill.billRate}}</td>
+							<td><span class="glyphicon glyphicon-pencil"></span></td> <td><span id="deleteBillTypeId" ng-click="billCtrl.deleteBillType((bill._id))" class="glyphicon glyphicon-trash"></span></td>
+						</tr>
+					</tbody>
+				</table>
+			  </div>
+		  </div>
+		</div>

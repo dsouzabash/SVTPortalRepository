@@ -1,0 +1,17 @@
+<div class="table-responsive">
+	<table class="table table-striped" ng-controller="resourceAdminController as resAdminCtrl" border='1'>
+		<thead>
+			<tr>
+				<th>Resource Name</th>
+				<th>Resource Type</th>
+			</tr>
+		</thead>
+		<tbody ng-repeat="resList in resAdminCtrl.resList track by $index">
+			<tr>
+				<td contenteditable='true'>{{resList.name}}</td>
+				<td contenteditable='true'>{{resList.type}}</td>
+				<td><span class="glyphicon glyphicon-pencil"></span></td> <td><span id="deleteResourceId" ng-click="resAdminCtrl.deleteResource(resList._id)" class="glyphicon glyphicon-trash"></span></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

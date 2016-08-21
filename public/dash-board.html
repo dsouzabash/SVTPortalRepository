@@ -1,0 +1,72 @@
+<div class="table-responsive">
+            <table class="table table-striped" ng-controller="dashboardController as dashboardCtrl" >
+              <thead>
+                <tr>
+                  <th href="#" ng-click="orderByField='name'; reverseSort = !reverseSort">Resource<span ng-show="orderByField == 'name'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span></th>
+				  <th href="#" ng-click="orderByField='client'; reverseSort = !reverseSort">Client <span ng-show="orderByField == 'client'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span></th>
+                  <th href="#" ng-click="orderByField='SO'; reverseSort = !reverseSort">SO<span ng-show="orderByField == 'SO'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span></th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th href="#" ng-click="orderByField='city'; reverseSort = !reverseSort">City<span ng-show="orderByField == 'city'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span></th>
+				  <th href="#" ng-click="orderByField='state'; reverseSort = !reverseSort">State<span ng-show="orderByField == 'state'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span></th>
+				  <th href="#" ng-click="orderByField='travel'; reverseSort = !reverseSort">Travel<span ng-show="orderByField == 'travel'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span></th>
+				  <th href="#" ng-click="orderByField='projectManager'; reverseSort = !reverseSort">Project Manager<span ng-show="orderByField == 'projectManager'"><span ng-show="!reverseSort">^</span><span ng-show="reverseSort">v</span></span></th>
+                </tr>
+              </thead>
+              <tbody ng-repeat="resource in dashboardCtrl.resource track by $index" ng-class="{'selected':$index == selectedRow}" ng-click="setClickedRow(resource)">
+                <tr>
+					<script type="text/ng-template" id="myModalContent.html">
+						<div class="modal-header">
+							<h3 class="modal-title">Project Details:</h3>
+						</div>
+						<div class="modal-body">
+									<table>
+									<tr>
+									<td> <b>Client Name: </b> {{selectedRow.client}} </td>
+									<td> <b>SO Number: </b> {{selectedRow.SO}} </td>
+									</tr>
+									<tr>
+									<td> <b> Resource Name: </b> {{selectedRow.name}} </td>
+									</tr>
+									<tr>
+									<td> <b> Start Date: </b> {{selectedRow.startDate | date:'MM.dd.yyyy'}} </td>
+									<td> <b>End Date: </b>{{selectedRow.endDate | date:'MM.dd.yyyy'}} </td>
+									<tr>
+									<td> <b>City: </b> {{selectedRow.city}} </td>
+									<td> <b>State: </b>{{selectedRow.state}} </td>
+									</tr>
+									<tr>
+									<td> <b>Travel: </b>{{selectedRow.travel}} </td>
+									</tr>
+									<tr>
+									<td> <b>Application: </b>{{selectedRow.app}} {{selectedRow.appVersion}}</td>
+									</tr>
+									<tr>
+									<td> <b>Billable Rate: </b>{{selectedRow.billableRate}} {{selectedRow.rate}}</td>
+									</tr>
+									<tr>
+									<td> <b>Project Manager:</b> {{selectedRow.projectManager}} </td>
+									</tr>
+									<tr>
+									<td> <b>Notes:</b> {{selectedRow.Notes}} </td>
+									</tr>
+									</table>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+							<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+						</div>
+					</script>
+                  <td>{{resource.name}}</td>
+                  <td>{{resource.client}}</td>
+				  <td>{{resource.SO}}</td>
+                  <td>{{resource.startDate | date:'MM.dd.yyyy'}}</td>
+                  <td>{{resource.endDate | date:'MM.dd.yyyy'}}</td>
+                  <td>{{resource.city}}</td>
+				  <td>{{resource.state}}</td>
+				  <td>{{resource.travel}}</td>
+				  <td>{{resource.projectManager}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>

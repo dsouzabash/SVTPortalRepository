@@ -1,0 +1,86 @@
+<form name="requestForm" ng-controller="RequestController as requestCtrl" ng-submit="requestForm.$valid && requestCtrl.addRequest(resource)" novalidate>
+			<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="resourceName" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="name for name in names | filter:$viewValue | limitTo:8" class="form-control" placeholder="Resource Name"/>
+				</div>	
+				<div class="col-xs-3 form-group">
+					<input type="text" class="form-control" id="soNum" placeholder="SO Number" />
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="clientName" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="client for client in clients | filter:$viewValue | limitTo:8" class="form-control" placeholder="Client Name"/>
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="projMgr" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="projMgr for projMgr in projMgrs | filter:$viewValue | limitTo:8" class="form-control" placeholder="Project Manager"/>
+				</div>
+			</div>
+			<div class = "row">
+					<div class="col-xs-3 form-group">
+						<div class="date">
+							<div class="input-group input-append date" id="schedule_startDate">
+								<input type="text" placeholder="Start Date" class="form-control" name="date" />
+								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-3 form-group">
+						<div class="date">
+							<div class="input-group input-append date" id="schedule_endDate">
+								<input type="text" placeholder="End Date" class="form-control" name="date" />
+								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div class = "row">
+				<div class="col-xs-3 form-group">
+					<label for="duration">Duration: </label>
+				</div>
+			</div>
+			<div class = "row">
+				<div class="col-xs-3 form-group">
+					<input type="text" class="form-control" id="cityName" placeholder="City" />
+				</div>
+				<div class="col-xs-3 form-group">
+					<input type="text" class="form-control" id="stateName" placeholder="State" />
+				</div>
+				<div class="col-xs-3 form-group">
+					<input type="text" class="form-control" id="zipNum" placeholder="Zip" />
+				</div>
+				<div class="col-xs-3 form-group">
+					<label for="country">Country: US</label>
+				</div>
+			</div>
+			<div class = "row">
+				<div class="col-xs-3 form-group">
+					<label for="active">Active:</label>
+					<input type="checkbox" name="my-checkbox" checked />
+						<script>
+							$("[name='my-checkbox']").bootstrapSwitch();
+						</script>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input id="travelType" type="text" ng-model="ngModelOptionsSelected" ng-model-options="modelOptions" uib-typeahead="travelTypes for travelTypes in travelTypeList | filter:$viewValue | limitTo:3"  class="form-control" placeholder="Travel Type New" />
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input type="text" class="form-control" id="billableRate" placeholder="Billable Rate" />
+				</div>
+				<div class="col-xs-3 form-group" ng-controller="AutoFillController">
+					<input type="text" class="form-control" id="application" placeholder="Application" />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 form-group">
+					<label for="notes">Notes:</label>
+					<textarea ng-model="requestCtrl.request.notes" required></textarea>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-6 form-group">
+					<input type="submit" value = "Submit" class ="btn btn-default" />
+				</div>
+			</div>
+		  </div>
+		  </form>

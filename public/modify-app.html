@@ -1,0 +1,17 @@
+<div class="table-responsive">
+	<table class="table table-striped" ng-controller="appController as appCtrl" border='1'>
+		<thead>
+			<tr>
+				<th>Application Name</th>
+				<th>Application Version</th>
+			</tr>
+		</thead>
+		<tbody ng-repeat="appList in appCtrl.appList track by $index">
+			<tr>
+				<td contenteditable='true'>{{appList.appName}}</td>
+				<td contenteditable='true'>{{appList.appVersion}}</td>
+				<td><span class="glyphicon glyphicon-pencil"></span></td> <td><span id="deleteTravelTypeId" ng-click="appCtrl.deleteAppType((appList._id))" class="glyphicon glyphicon-trash"></span></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

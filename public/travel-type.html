@@ -1,0 +1,43 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="alert alert-success fade in" id="successMessageTravelType" style="display: none;">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>Success!</strong> Travel Type addedd successfully
+		</div>
+	</div>
+	<div class="row">
+		<div class="alert alert-success fade in" id="successDeleteMessageTravelType" style="display: none;">
+			<a href="#" class="close" data-dismiss="alert">&times;</a>
+			<strong>Success!</strong> Bill Type deleted successfully
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xs-12 form-group">
+			<form name="createTravelForm" ng-controller="createTravelController as createTravelCtrl" ng-submit="createTravelForm.$valid && createTravelCtrl.createTravel()" novalidate>
+				<div class="col-xs-3 form-group">
+					<input type="text" class="form-control" id="appName" ng-model="createTravelCtrl.travelType" placeholder="Travel Type" />
+				</div>
+				<div class="col-xs-6 form-group">
+					<input type="submit" value = "Create" class ="btn btn-default" />
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="row">
+		<div class="table-responsive col-xs-3">
+			<table class="table table-striped" ng-controller="travelController as travelCtrl" border='1'>
+				<thead>
+					<tr>
+						<th>Travel Type</th>
+					</tr>
+				</thead>
+				<tbody ng-repeat="travel in travelCtrl.travel">
+					<tr>
+						<td contenteditable='true'>{{travel.travelTypeName}}</td>
+						<td><span class="glyphicon glyphicon-pencil"></span></td> <td><span id="deleteTravelTypeId" ng-click="travelCtrl.deleteTravelType((travel._id))" class="glyphicon glyphicon-trash"></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

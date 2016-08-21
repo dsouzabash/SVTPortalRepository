@@ -1,0 +1,39 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="alert alert-success fade in" id="successMessageApplication" style="display: none;">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<strong>Success!</strong> Application addedd successfully
+		</div>
+	</div>
+			  <div class="row">
+				  <form name="createAppForm" method="post" ng-controller="createAppController as createAppCtrl" ng-submit="createAppForm.$valid && createAppCtrl.createApp()" novalidate>
+					<div class="col-xs-3 form-group">
+						<input type="text" class="form-control" id="appName" ng-model="createAppCtrl.appName" placeholder="Application Name" />
+					</div>
+					<div class="col-xs-3 form-group">
+						<input type="text" class="form-control" id="appVersion" ng-model="createAppCtrl.appVersion" placeholder="Application Version" />
+					</div>
+					<div class="col-xs-6 form-group">
+						<input type="submit" value = "Create" class ="btn btn-default" />
+					</div>
+				  </form>
+			  </div>
+			<div class = "row">
+				<div class="table-responsive">
+					<table class="table table-striped" ng-controller="appController as appCtrl" border='1'>
+						<thead>
+						<tr>
+						  <th>Application Name</th>
+						  <th>Application Version</th>
+						</tr>
+					  </thead>
+					  <tbody ng-repeat="appList in appCtrl.appList track by $index">
+						<tr>
+						  <td>{{appList.appName}}</td> 
+						  <td>{{appList.appVersion}}</td>
+						</tr>
+					  </tbody>
+					</table>
+			  </div>
+			</div>
+		  </div>

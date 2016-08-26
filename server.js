@@ -234,7 +234,6 @@ app.get('/resources/filteredSchedule', function (req, res) {
 	filteredScheduleList = [];
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(null, err);
-		console.log(req.query);
 		scheduleFilterFn(db, req.query, function() {
 			res.json(filteredScheduleList);
 			db.close();
@@ -244,13 +243,70 @@ app.get('/resources/filteredSchedule', function (req, res) {
 });
 
 var scheduleFilterFn = function(db, req, callback) {
-	var cursor = db.collection('schedule').find({"startDate":{$eq:req.startVal},"endDate":{$eq:req.endVal}});
-	//var cursor = db.collection('schedule').find({"startDate":{$eq:"2014-04-28T00:00:00.000Z"},"endDate":{$eq:"2014-05-02T00:00:00.000Z"}});
+	var cursor = {};
+	console.log(req.startFilter+req.endFilter);
+	console.log(req.endVal.length);
+	var cursorActions = {
+		"onStartDateonEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$eq:req.startVal},"endDate":{$eq:req.endVal}});
+		},
+		"onStartDatebeforeEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$eq:req.startVal},"endDate":{$lte:req.endVal}});
+		},
+		"onStartDateafterEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$eq:req.startVal},"endDate":{$gte:req.endVal}});
+		},
+		"beforeStartDateonEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$lte:req.startVal},"endDate":{$eq:req.endVal}});
+		},
+		"beforeStartDatebeforeEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$lte:req.startVal},"endDate":{$lte:req.endVal}});
+		},
+		"beforeStartDateafterEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$lte:req.startVal},"endDate":{$gte:req.endVal}});
+		},
+		"afterStartDateonEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$gte:req.startVal},"endDate":{$eq:req.endVal}});
+		},
+		"afterStartDatebeforeEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$gte:req.startVal},"endDate":{$lte:req.endVal}});
+		},
+		"afterStartDateafterEndDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$gte:req.startVal},"endDate":{$gte:req.endVal}});
+		},
+		"beforeStartDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$lte:req.startVal}});
+		},
+		"onStartDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$eq:req.startVal}});
+		},
+		"afterStartDate": function(){
+			cursor = db.collection('schedule').find({"startDate":{$gte:req.startVal}});
+		},
+		"beforeEndDate": function(){
+			cursor = db.collection('schedule').find({"endDate":{$lte:req.endVal}});
+		},
+		"onEndDate": function(){
+			cursor = db.collection('schedule').find({"endDate":{$eq:req.endVal}});
+		},
+		"afterEndDate": function(){
+			cursor = db.collection('schedule').find({"endDate":{$gte:req.endVal}});
+		}
+	}
+	if(req.startVal.length ==24 && req.endVal.length ==24){
+		cursorActions[req.startFilter+req.endFilter]();
+	}
+	else if(req.startVal.length ==24 && req.endVal.length ==0){
+		cursorActions[req.startFilter]();
+	}
+	else if(req.startVal.length ==0 && req.endVal.length ==24){
+		cursorActions[req.endFilter]();
+	}
+	
 	cursor.each(function(err, doc) {
 		assert.equal(err, null);
 		if (doc != null) {
 			filteredScheduleList.push(doc);
-			console.dir(filteredScheduleList);
 		} else {
 			callback();
 		}

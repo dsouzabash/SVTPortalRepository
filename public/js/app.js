@@ -266,26 +266,119 @@
 			endDate.setDate(endDate.getDate());
 			startDate = startDate.toISOString().replace('T07','T00');
 			endDate = endDate.toISOString().replace('T07','T00');
-
-			$http.get('/resources/filteredSchedule',{
-				params:{
-					"startFilter":$('input[name="optradioStart"]:checked').val(),
-					"endFilter":$('input[name="optradioEnd"]:checked').val(),
-					"startVal": startDate,
-					"endVal": endDate
+			
+			if($('input[name="optradioStart"]:checked').val() == "betweenStartDate" && $('input[name="optradioStart"]:checked').val() == "betweenEndDate"){
+				var startDate2 = new Date($('#startDate_2').val());
+				startDate2.setDate(startDate2.getDate());
+				var endDate2 = new Date($('#endDate_2').val());
+				endDate2.setDate(endDate2.getDate());
+				startDate2 = startDate2.toISOString().replace('T07','T00');
+				endDate2 = endDate2.toISOString().replace('T07','T00');
+				if((startDate != "Invalid Date" && endDate != "Invalid Date" && startDate2 != "Invalid Date" && endDate2 != "Invalid Date") && (startDate.length==0||startDate.length==24||endDate.length==0&&endDate.length==24||startDate2.length==0||startDate2.length==24||endDate2.length==0&&endDate2.length==24)){
+					$http.get('/resources/filteredSchedule',{
+						params:{
+							"startFilter":$('input[name="optradioStart"]:checked').val(),
+							"endFilter":$('input[name="optradioEnd"]:checked').val(),
+							"startVal": startDate,
+							"endVal": endDate,
+							"startVal2": startDate2,
+							"endVal2": endDate2
+						}
+					}).success(function(data){
+						console.log('Getting filtered resources in controller');
+						if(data.length==0){
+							globalFliteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
+						}
+						for(var i=0;i<data.length;i++){
+							globalFliteredResource.push(data[i]);
+						}
+						$scope.loading = false;
+					}).error(function(data) {
+						console.log('Error: ' + data);
+					});
 				}
-			}).success(function(data){
-					console.log('Getting filtered resources in controller');
-					if(data.length==0){
-						globalFliteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
-					}
-					for(var i=0;i<data.length;i++){
-						globalFliteredResource.push(data[i]);
-					}
-					$scope.loading = false;
-				}).error(function(data) {
-					console.log('Error: ' + data);
-				});
+			}
+			else if($('input[name="optradioStart"]:checked').val() == "betweenStartDate" && $('input[name="optradioStart"]:checked').val() != "betweenEndDate"){
+				var startDate2 = new Date($('#startDate_2').val());
+				startDate2.setDate(startDate2.getDate());
+				startDate2 = startDate2.toISOString().replace('T07','T00');
+				if((startDate != "Invalid Date" && endDate != "Invalid Date" && startDate2 != "Invalid Date") && (startDate.length==0||startDate.length==24||endDate.length==0&&endDate.length==24||startDate2.length==0||startDate2.length==24)){
+					$http.get('/resources/filteredSchedule',{
+						params:{
+							"startFilter":$('input[name="optradioStart"]:checked').val(),
+							"endFilter":$('input[name="optradioEnd"]:checked').val(),
+							"startVal": startDate,
+							"endVal": endDate,
+							"startVal2": startDate2,
+						}
+					}).success(function(data){
+						console.log('Getting filtered resources in controller');
+						if(data.length==0){
+							globalFliteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
+						}
+						for(var i=0;i<data.length;i++){
+							globalFliteredResource.push(data[i]);
+						}
+						$scope.loading = false;
+					}).error(function(data) {
+						console.log('Error: ' + data);
+					});
+				}
+			}
+			else if($('input[name="optradioStart"]:checked').val() != "betweenStartDate" && $('input[name="optradioStart"]:checked').val() == "betweenEndDate"){
+				var endDate2 = new Date($('#endDate_2').val());
+				endDate2.setDate(endDate2.getDate());
+				endDate2 = endDate2.toISOString().replace('T07','T00');
+				if((startDate != "Invalid Date" && endDate != "Invalid Date" && endDate2 != "Invalid Date") && (startDate.length==0||startDate.length==24||endDate.length==0&&endDate.length==24||endDate2.length==0||endDate2.length==24)){
+					$http.get('/resources/filteredSchedule',{
+						params:{
+							"startFilter":$('input[name="optradioStart"]:checked').val(),
+							"endFilter":$('input[name="optradioEnd"]:checked').val(),
+							"startVal": startDate,
+							"endVal": endDate,
+							"startVal2": startDate2,
+							"endVal2": endDate2
+						}
+					}).success(function(data){
+						console.log('Getting filtered resources in controller');
+						if(data.length==0){
+							globalFliteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
+						}
+						for(var i=0;i<data.length;i++){
+							globalFliteredResource.push(data[i]);
+						}
+						$scope.loading = false;
+					}).error(function(data) {
+						console.log('Error: ' + data);
+					});
+				}
+			}
+			else if($('input[name="optradioStart"]:checked').val() != "betweenStartDate" && $('input[name="optradioStart"]:checked').val() != "betweenEndDate"){
+				if(startDate.length==0||startDate.length==24||endDate.length==0&&endDate.length==24){
+					$http.get('/resources/filteredSchedule',{
+						params:{
+							"startFilter":$('input[name="optradioStart"]:checked').val(),
+							"endFilter":$('input[name="optradioEnd"]:checked').val(),
+							"startVal": startDate,
+							"endVal": endDate
+						}
+					}).success(function(data){
+						console.log('Getting filtered resources in controller');
+						if(data.length==0){
+							globalFliteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
+						}
+						for(var i=0;i<data.length;i++){
+							globalFliteredResource.push(data[i]);
+						}
+						$scope.loading = false;
+					}).error(function(data) {
+						console.log('Error: ' + data);
+					});
+				}
+				else{
+					console.log('Invalid Date');
+				}
+			}
 		})
 	});
 	
@@ -293,23 +386,6 @@
 		return function (resource, filteredResource) {
 			$('#filter').on('mousedown',function($scope){
 				console.log('Inside tableFilter: ' + document.getElementById('filterLoading').style.display);
-								
-				/*filters.push({
-					"startFilter":$('input[name="optradioStart"]:checked').val(),
-					"endFilter":$('input[name="optradioEnd"]:checked').val(),
-					"startVal": startDate,
-					"endVal": endDate
-				});
-				$http.get('/resources/schedule:filter',filters).success(function(data){
-					console.log('Getting resources in controller');
-					for(var i=0;i<data.length;i++){
-						filteredResource.push(data[i]);
-					}
-					$scope.loading = false;
-				}).error(function(data) {
-					console.log('Error: ' + data);
-				});
-				*/
 
 				/*if(filteredResource.length==0){
 				var startDate = new Date($('#startDate').val());
@@ -604,9 +680,9 @@
 			$('#reset').on('click',function(){
 				$('#startDate').val("");
 				$('#endDate').val("");
-				for(var i=0; i<filteredResource.length; i++)
-					filteredResource.pop()
+				globalFliteredResource = [];
 		    });
+			
 			filteredResource = Array.from(globalFliteredResource);
 			
 			setTimeout(function(){$('#filterLoading').hide()},1500);

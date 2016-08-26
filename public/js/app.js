@@ -12,7 +12,7 @@
 	
 	var project = [];
 	var projectDashboard = [];
-	
+	var globalFliteredResource = [];
 	//Schedule Request Controller
 	app.controller('RequestController',function($http){
 		this.request = {};
@@ -258,8 +258,16 @@
 		this.whatsChecked = function(selectedRadio){
 			return $scope.selectRadioItem === selectedRadio;
 		}
+		
 		$('#filter').on('mousedown',function($scope){
-			$http.get('/resources/schedule',{
+			var startDate = new Date($('#startDate').val());
+			startDate.setDate(startDate.getDate());
+			var endDate = new Date($('#endDate').val());
+			endDate.setDate(endDate.getDate());
+			startDate = startDate.toISOString().replace('T07','T00');
+			endDate = endDate.toISOString().replace('T07','T00');
+
+			$http.get('/resources/filteredSchedule',{
 				params:{
 					"startFilter":$('input[name="optradioStart"]:checked').val(),
 					"endFilter":$('input[name="optradioEnd"]:checked').val(),
@@ -267,29 +275,26 @@
 					"endVal": endDate
 				}
 			}).success(function(data){
-					console.log('Getting resources in controller');
+					console.log('Getting filtered resources in controller');
+					if(data.length==0){
+						globalFliteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
+					}
 					for(var i=0;i<data.length;i++){
-						filteredResource.push(data[i]);
+						globalFliteredResource.push(data[i]);
 					}
 					$scope.loading = false;
 				}).error(function(data) {
 					console.log('Error: ' + data);
 				});
 		})
-		
 	});
 	
 	angular.module('app.filters', []).filter('tableFilter', [function () {
 		return function (resource, filteredResource) {
 			$('#filter').on('mousedown',function($scope){
 				console.log('Inside tableFilter: ' + document.getElementById('filterLoading').style.display);
-				
-				var startDate = new Date($('#startDate').val());
-				startDate.setDate(startDate.getDate()-1);
-				var endDate = new Date($('#endDate').val());
-				endDate.setDate(endDate.getDate()-1);
-				
-				filters.push({
+								
+				/*filters.push({
 					"startFilter":$('input[name="optradioStart"]:checked').val(),
 					"endFilter":$('input[name="optradioEnd"]:checked').val(),
 					"startVal": startDate,
@@ -304,6 +309,7 @@
 				}).error(function(data) {
 					console.log('Error: ' + data);
 				});
+				*/
 
 				/*if(filteredResource.length==0){
 				var startDate = new Date($('#startDate').val());
@@ -588,6 +594,8 @@
 					filteredResource.pop();
 			  }
 			  */
+			  
+			  
 			  if($('#startDate').val().length==0 && $('#endDate').val().length==0){
 				for(var i=0; i<filteredResource.length; i++)
 					filteredResource.pop();
@@ -599,12 +607,14 @@
 				for(var i=0; i<filteredResource.length; i++)
 					filteredResource.pop()
 		    });
+			filteredResource = Array.from(globalFliteredResource);
+			
 			setTimeout(function(){$('#filterLoading').hide()},1500);
 			if(!angular.isUndefined(resource) && !angular.isUndefined(filteredResource) && filteredResource.length > 0) {
-				//console.log('Displaying Filtered Resource: ' + filteredResource.length);
+				console.log('Displaying Filtered Resource: ' + filteredResource.length);
 				return filteredResource;
 			} else {
-				//console.log('Displaying Complete Resource');
+				console.log('Displaying Complete Resource');
 				return resource;
 			}
 		};

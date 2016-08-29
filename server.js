@@ -306,40 +306,19 @@ var scheduleFilterFn = function(db, req, callback) {
 };
 
 app.post('/resources/schedule', function(req, res) {
-	console.log('Inside post schedule: ');
+	console.log('Inside post schedule: ' + req.body.length);
 	// create a todo, information comes from AJAX request from Angular
 	MongoClient.connect(url, function(err, db) {
 		assert.equal(null, err);
-		db.collection('schedule').insertOne({
-				"name": req.body.name,
-				"projectManager": req.body.projectManager,
-				"client": req.body.client,
-				"SO": req.body.SO,
-				"startDate": req.body.startDate,
-				"endDate": req.body.endDate,
-				"weeks": req.body.weeks,
-				"days": req.body.days,
-				"city": req.body.city,
-				"state": req.body.state,
-				"travel": req.body.travel,
-				"app": req.body.app,
-				"appVersion": req.body.appVersion,
-				"billableRate": req.body.billableRate,
-				"rate": req.body.rate,
-				"resType": req.body.resType,
-				"activeFlag": req.body.activeFlag,
-				"Notes": req.body.Notes,
-				"createdDate": req.body.createdDate,
-				"createdBy": req.body.createdBy
-		}, function(err, result) {
-			assert.equal(err, null);
-			scheduleFn(db, function() {
-				res.json(scheduleList);
-				db.close();
+		db.collection('schedule').insertMany(req.body, function(err, result) {
+				assert.equal(err, null);
+				scheduleFn(db, function() {
+					res.json(scheduleList);
+					db.close();
+				});
+				console.log("Inserted a document into the restaurants collection.");
+				//db.close();
 			});
-			console.log("Inserted a document into the restaurants collection.");
-			//db.close();
-		});
 	});
 });
 

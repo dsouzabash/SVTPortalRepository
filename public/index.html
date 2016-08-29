@@ -161,7 +161,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group" ng-show="resourceCtrl.whatsChecked('BetweenStartDate')">
+				<div class="form-group" id = "secondStartDate" style="display:none">
 					<div class="date">
 						<div class="input-group input-append date" id="viewSched_startDate_2">
 							<input type="text" placeholder="Start Date" class="form-control" name="date" id='startDate_2' ng-model="resourceCtrl.startDate_2"/>
@@ -172,16 +172,16 @@
 				<div class="btn-group form-group">
 					<div class="btn-group">
 						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('BeforeEndDate')">
-						  <input type="radio" name="optradioEnd" value="beforeEndDate"/>Before
+							<input type="radio" name="optradioEnd" value="beforeEndDate"/>Before
 						</label>
 						<label class="radio-inline active" ng-click="resourceCtrl.selectRadio('OnEndDate')">
-						  <input type="radio" name="optradioEnd" value="onEndDate" checked=""/>On
+							<input type="radio" name="optradioEnd" value="onEndDate" checked=""/>On
 						</label>
 						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('AfterEndDate')">
-						  <input type="radio" name="optradioEnd" value="afterEndDate"/>After
+							<input type="radio" name="optradioEnd" value="afterEndDate"/>After
 						</label>
 						<label class="radio-inline" ng-click="resourceCtrl.selectRadio('BetweenEndDate')">
-						  <input type="radio" name="optradioEnd" value="betweenEndDate"/>Between
+							<input type="radio" name="optradioEnd" value="betweenEndDate"/>Between
 						</label>
 					</div>
 				</div>
@@ -193,7 +193,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="form-group" ng-show="resourceCtrl.whatsChecked('BetweenEndDate')">
+				<div class="form-group" id = "secondEndDate" style="display:none">
 					<div class="date">
 						<div class="input-group input-append date" id="viewSched_endDate_2">
 							<input type="text" placeholder="End Date" class="form-control" name="date" id='endDate_2' ng-model="resourceCtrl.endDate_2"/>
@@ -204,19 +204,18 @@
 				<div class="col-xs-6 form-group">
 					<!--<input type="submit" id= "filter" value = "Filter" class ="btn btn-default" />-->
 					<button type="submit" id= "filter" class="btn btn-default" aria-label="Filter">
-					  <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
 					</button>
 				</div>
 				<div class="col-xs-6 form-group">
 					<button type="submit" id= "reset" class="btn btn-default" aria-label="Reset">
-					  <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+						<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
 					</button>
 				</div>
 				<div id="filterLoading" class="loading" style="display: none;">
 					<img src="images\SVT_gif.gif" alt="SVTLoading" style="width:150px;height:50px;"/> Loading...
 				</div>
 				</form>
-				
 		  </div>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-show= "navCtrl.isSelected('dashboard')">
@@ -263,7 +262,7 @@
 					<div class="col-xs-3 form-group">
 						<div class="date">
 							<div class="input-group input-append date">
-								<input type="text" placeholder="Start Date" class="form-control" id="schedule_startDate" name="date" required/>
+								<input type="text" placeholder="Start Date" class="form-control" id="schedule_startDate1" name="date" required/>
 								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
@@ -271,13 +270,17 @@
 					<div class="col-xs-3 form-group">
 						<div class="date">
 							<div class="input-group input-append date">
-								<input type="text" placeholder="End Date" class="form-control" id="schedule_endDate" name="date" required/>
+								<input type="text" placeholder="End Date" class="form-control" id="schedule_endDate1" onchange="onChangeFn(1)" name="date" required/>
 								<span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
 							</div>
 						</div>
 					</div>
 					<button type="button" class="btn btn-default" aria-label="Add Date" add-div><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
 					<button type="button" class="btn btn-default" aria-label="Remove Date" remove-div><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></button>
+					<div class="col-xs-3 form-group">
+						<label for="duration">Duration: </label>
+						<label id="length1"></label>
+					</div>
 			</div>
 			<div id="newDateContainer"></div>
 			<div class = "row">

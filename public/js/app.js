@@ -21,31 +21,35 @@
 			var today = new Date();
 			console.log('Inside add request');
 			//project.push(this.request);
-			project.push({
-				"name": $('#resourceName').val(),
-				"projectManager": $('#projMgr').val(),
-				"client": $('#clientName').val(),
-				"SO": $('#soNum').val(),
-				"startDate": (new Date($('#schedule_startDate').val())).toISOString(),
-				"endDate": (new Date($('#schedule_endDate').val())).toISOString(),
-				"weeks": $('#length').text().split('weeks')[0].trim(),
-				"days": ($('#length').text().split('and')[1].trim()).split(' ')[0],
-				"city": $('#cityName').val(),
-				"state": $('#stateName').val(),
-				"travel": $('#travelType').val(),
-				"app": $('#application').val().split(' ')[0],
-				"appVersion": $('#application').val().split(' ')[1],
-				"billableRate": $('#billableRate').val().slice(0,$('#billableRate').val().lastIndexOf('-')).trim(),
-				"rate": $('#billableRate').val().split('-')[$('#billableRate').val().split('-').length-1].trim(),
-				"resType": "SE",
-				"activeFlag": $("[name='my-checkbox']").bootstrapSwitch('state'),
-				"Notes": $('#notes').val(),
-				"createdDate": today,
-				"createdBy": "adsouza"
-			});
+			for(var i = 1; i<=$scope.count;i++){
+				project.push({
+					"name": $('#resourceName').val(),
+					"projectManager": $('#projMgr').val(),
+					"client": $('#clientName').val(),
+					"SO": $('#soNum').val(),
+					"weeks": $('#length').text().split('weeks')[0].trim(),
+					"days": ($('#length'+i).text().split('and')[1].trim()).split(' ')[0],
+					"city": $('#cityName').val(),
+					"state": $('#stateName').val(),
+					"travel": $('#travelType').val(),
+					"app": $('#application').val().split(' ')[0],
+					"appVersion": $('#application').val().split(' ')[1],
+					"billableRate": $('#billableRate').val().slice(0,$('#billableRate').val().lastIndexOf('-')).trim(),
+					"rate": $('#billableRate').val().split('-')[$('#billableRate').val().split('-').length-1].trim(),
+					"resType": "SE",
+					"activeFlag": $("[name='my-checkbox']").bootstrapSwitch('state'),
+					"Notes": $('#notes').val(),
+					"createdDate": today,
+					"createdBy": "adsouza",
+					"count": $scope.count,
+					"startDate" : (new Date($('#schedule_startDate'+i).val())).toISOString(),
+					"endDate" : (new Date($('#schedule_endDate'+i).val())).toISOString()
+				});
+			}
+			console.log(project);
 			var thisResource = project[project.length-1];
 			console.log(thisResource);
-			$http.post('/resources/schedule', thisResource).success(function(thisResource){
+			$http.post('/resources/schedule', project).success(function(thisResource){
 				console.log('Inside post schedule');
 				document.getElementById('successMessageApplication').style.display = 'block';
 			}).error(function(data) {
@@ -228,19 +232,22 @@
 	});
 	
 	//Directive that returns an element which adds buttons on click which show an alert on click
-	app.directive("addDiv", function($compile){   
-      return{
-        restrict: 'AE',
-        link: function(scope , element,attr){        
-           element.bind("click", function(e){
-		   scope.count++;
-           var container =   angular.element(document.querySelector("#newDateContainer"));
-           var childNode = $compile('<div class = "row"><div class="col-xs-3 form-group"><div class="date"><div class="input-group input-append date"><input type="text" placeholder="Start Date" class="form-control" id="schedule_startDate'+scope.count+'" name="date" required/><span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span></div></div></div><div class="col-xs-3 form-group"><div class="date"><div class="input-group input-append date"><input type="text" placeholder="End Date" class="form-control" id="schedule_endDate'+scope.count+'" name="date" required/><span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span></div></div></div></div>')(container);
-           container.append(childNode);
-           });
-        }
-    };
-   });
+	app.directive("addDiv", function($compile){
+		return{
+			restrict: 'AE',
+			link: function(scope , element,attr){
+				element.bind("click", function(e){
+					scope.count++;
+					var container =   angular.element(document.querySelector("#newDateContainer"));
+					var childNode = $compile('<div class = "row"><div class="col-xs-3 form-group"><div class="date"><div class="input-group input-append date"><input type="text" placeholder="Start Date" class="form-control" id="schedule_startDate'+scope.count+'" name="date" required/><span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span></div></div></div><div class="col-xs-3 form-group"><div class="date"><div class="input-group input-append date"><input type="text" placeholder="End Date" class="form-control" id="schedule_endDate'+scope.count+'" onchange="onChangeFn('+scope.count+')" name="date" required/><span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span></div></div></div><div class="col-xs-3 form-group"><label for="duration">Duration: </label><label id="length'+scope.count+'"></label></div></div>')(container);
+					container.append(childNode);
+					$('.date').datepicker({
+						format: 'mm.dd.yyyy',
+					});
+				});
+			}
+		};
+	});
    app.directive("removeDiv", function($compile){   
       return{
         restrict: 'AE',
@@ -283,6 +290,15 @@
 
 		this.selectRadio = function(radioItem){
 			$scope.selectRadioItem = radioItem;
+			console.log(radioItem);
+			if($('input[name="optradioStart"]:checked').val() == 'betweenStartDate'){
+				document.getElementById('secondStartDate').style.display = 'block';
+			}
+			else document.getElementById('secondStartDate').style.display = 'none';
+			if($('input[name="optradioEnd"]:checked').val() == 'betweenEndDate'){
+				document.getElementById('secondEndDate').style.display = 'block';
+			}
+			else document.getElementById('secondEndDate').style.display = 'none';
 		}
 		this.whatsChecked = function(selectedRadio){
 			return $scope.selectRadioItem === selectedRadio;
@@ -415,292 +431,6 @@
 		return function (resource, filteredResource) {
 			$('#filter').on('mousedown',function($scope){
 				console.log('Inside tableFilter: ' + document.getElementById('filterLoading').style.display);
-
-				/*if(filteredResource.length==0){
-				var startDate = new Date($('#startDate').val());
-				startDate.setDate(startDate.getDate()-1);
-				var endDate = new Date($('#endDate').val());
-				endDate.setDate(endDate.getDate()-1);
-				if(startDate!='Invalid Date' && $('#startDate').val().length==10 && $('#endDate').val().length==0){
-					var findRow = false;
-					for(var i=0;i<resource.length;i++){
-						var rowDate = new Date(resource[i].startDate.split('T')[0]);
-						rowDate.setHours(0,0,0,0);
-						if($('input[name="optradioStart"]:checked').val() == 'beforeStartDate'){
-							if(startDate.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + startDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioStart"]:checked').val() == 'afterStartDate'){
-							if(startDate.valueOf() < rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + startDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioStart"]:checked').val() == 'onStartDate'){
-							if(startDate.valueOf() === rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + startDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioStart"]:checked').val() == 'betweenStartDate'){
-							var startDate_2 = new Date($('#startDate_2').val());
-							startDate_2.setDate(startDate_2.getDate()-1);
-							if(startDate.valueOf() < rowDate.valueOf() && startDate_2.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + startDate + resource.length);
-							}
-						}
-						if(i== resource.length-1){
-							if(findRow==false){
-								filteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
-							}
-						}
-					}
-				}
-				else if(endDate!='Invalid Date' && $('#startDate').val().length==0 && $('#endDate').val().length==10){
-					var findRow = false;
-					for(var i=0;i<resource.length;i++){
-						var rowDate = new Date(resource[i].endDate.split('T')[0]);
-						rowDate.setHours(0,0,0,0);
-						if($('input[name="optradioEnd"]:checked').val() == 'beforeEndDate'){
-							if(endDate.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'afterEndDate'){
-							if(endDate.valueOf() < rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'onEndDate'){
-							if(endDate.valueOf() === rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'betweenEndDate'){
-							var endDate_2 = new Date($('#endDate_2').val());
-							endDate_2.setDate(endDate_2.getDate()-1);
-							if(endDate.valueOf() < rowDate.valueOf() && endDate_2.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						if(i== resource.length-1){
-							if(findRow==false){
-								filteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
-							}
-						}
-					}
-				}
-				else if(endDate!='Invalid Date' && $('#startDate').val().length==10 && $('#endDate').val().length==10){
-					var findRow = false;
-					for(var i=0;i<resource.length;i++){
-						var rowDate = new Date(resource[i].endDate.split('T')[0]);
-						rowDate.setHours(0,0,0,0);
-						if($('input[name="optradioEnd"]:checked').val() == 'beforeEndDate' && $('input[name="optradioStart"]:checked').val() == 'beforeStartDate'){
-							if(endDate.valueOf() > rowDate.valueOf() && startDate.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'beforeEndDate' && $('input[name="optradioStart"]:checked').val() == 'onStartDate'){
-							if(endDate.valueOf() > rowDate.valueOf() && startDate.valueOf() === rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'beforeEndDate' && $('input[name="optradioStart"]:checked').val() == 'afterStartDate'){
-							if(endDate.valueOf() > rowDate.valueOf() && startDate.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'beforeEndDate' && $('input[name="optradioStart"]:checked').val() == 'betweenStartDate'){
-							var startDate_2 = new Date($('#startDate_2').val());
-							startDate_2.setDate(startDate_2.getDate()-1);
-							if(endDate.valueOf() > rowDate.valueOf() && startDate.valueOf() < rowDate.valueOf() && startDate_2.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'afterEndDate' && $('input[name="optradioStart"]:checked').val() == 'afterStartDate'){
-							if(endDate.valueOf() < rowDate.valueOf() && startDate.valueOf() < rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'afterEndDate' && $('input[name="optradioStart"]:checked').val() == 'beforeStartDate'){
-							if(endDate.valueOf() < rowDate.valueOf() && startDate.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'afterEndDate' && $('input[name="optradioStart"]:checked').val() == 'onStartDate'){
-							if(endDate.valueOf() < rowDate.valueOf() && startDate.valueOf() === rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'afterEndDate' && $('input[name="optradioStart"]:checked').val() == 'betweenStartDate'){
-							var startDate_2 = new Date($('#startDate_2').val());
-							startDate_2.setDate(startDate_2.getDate()-1);
-							if(endDate.valueOf() < rowDate.valueOf() && startDate.valueOf() < rowDate.valueOf() && startDate_2.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'onEndDate' && $('input[name="optradioStart"]:checked').val() == 'onStartDate'){
-							if(endDate.valueOf() === rowDate.valueOf() && startDate.valueOf() === rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'onEndDate' && $('input[name="optradioStart"]:checked').val() == 'beforeStartDate'){
-							if(endDate.valueOf() === rowDate.valueOf() && startDate.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'onEndDate' && $('input[name="optradioStart"]:checked').val() == 'afterStartDate'){
-							if(endDate.valueOf() === rowDate.valueOf() && startDate.valueOf() < rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'onEndDate' && $('input[name="optradioStart"]:checked').val() == 'betweenStartDate'){
-							var startDate_2 = new Date($('#startDate_2').val());
-							startDate_2.setDate(startDate_2.getDate()-1);
-							if(endDate.valueOf() === rowDate.valueOf() && startDate.valueOf() < rowDate.valueOf() && startDate_2.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'betweenEndDate' && $('input[name="optradioStart"]:checked').val() == 'betweenStartDate'){
-							var startDate_2 = new Date($('#startDate_2').val());
-							startDate_2.setDate(startDate_2.getDate()-1);
-							var endDate_2 = new Date($('#endDate_2').val());
-							endDate_2.setDate(endDate_2.getDate()-1);
-							if(endDate.valueOf() < rowDate.valueOf() && endDate_2.valueOf() > rowDate.valueOf() && startDate.valueOf() < rowDate.valueOf() && startDate_2.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'betweenEndDate' && $('input[name="optradioStart"]:checked').val() == 'beforeStartDate'){
-							var endDate_2 = new Date($('#endDate_2').val());
-							endDate_2.setDate(endDate_2.getDate()-1);
-							if(endDate.valueOf() < rowDate.valueOf() && endDate_2.valueOf() > rowDate.valueOf() && startDate.valueOf() > rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'betweenEndDate' && $('input[name="optradioStart"]:checked').val() == 'afterStartDate'){
-							var endDate_2 = new Date($('#endDate_2').val());
-							endDate_2.setDate(endDate_2.getDate()-1);
-							if(endDate.valueOf() < rowDate.valueOf() && endDate_2.valueOf() > rowDate.valueOf() && startDate.valueOf() < rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						else if($('input[name="optradioEnd"]:checked').val() == 'betweenEndDate' && $('input[name="optradioStart"]:checked').val() == 'onStartDate'){
-							var endDate_2 = new Date($('#endDate_2').val());
-							endDate_2.setDate(endDate_2.getDate()-1);
-							if(endDate.valueOf() < rowDate.valueOf() && endDate_2.valueOf() > rowDate.valueOf() && startDate.valueOf() === rowDate.valueOf()){
-								findRow = true;
-								filteredResource.push(resource[i]);
-							}
-							else{
-								console.log('Not equal: ' + endDate + resource.length);
-							}
-						}
-						if(i== resource.length-1){
-							if(findRow==false){
-								filteredResource.push({'name':'No Results','client':'No Results','SO':'No results','startDate':$('#startDate').val(),'endDate':$('#endDate').val(),'city':'No Results','state':'No Results','travel':'No Results','projectManager':'No Results'});
-							}
-						}
-					}
-				}
-			  }
-			  else if($('#startDate').val().length==0 && $('#endDate').val().length==0){
-				for(var i=0; i<filteredResource.length; i++)
-					filteredResource.pop();
-			  }
-			  */
-			  
-			  
 			  if($('#startDate').val().length==0 && $('#endDate').val().length==0){
 				for(var i=0; i<filteredResource.length; i++)
 					filteredResource.pop();
@@ -780,46 +510,57 @@
 })();
 
 
-$(document).ready(function() {
-    $('.date').datepicker({
-		format: 'mm.dd.yyyy',
-	});
+	$(document).ready(function() {
+		$('.date').datepicker({
+			format: 'mm.dd.yyyy',
+		});
 	
-	/*$('.date').datepicker().on('changeDate',function(){
-		$('#schedule_startDate').change();
-	});*/
-	
-	$('#schedule_endDate').change(function () {
-		console.log($('#schedule_endDate').val());
-		var dt1 =  new Date($('#schedule_endDate').val()),dt2 = new Date($('#schedule_startDate').val());
-		if(dt1 && dt2){  
-			var mil = Math.floor(dt1 - dt2);
-			  
-			var seconds = (mil / 1000) | 0;
-			mil -= seconds * 1000;
+		window.calcBusinessDays = function(dDate1, dDate2) { // input given as Date objects
+			var iWeeks, iDateDiff, iAdjust = 0;
+			if (dDate2 < dDate1) return -1; // error code if dates transposed
+			var iWeekday1 = dDate1.getDay(); // day of week
+			var iWeekday2 = dDate2.getDay();
+			iWeekday1 = (iWeekday1 == 0) ? 7 : iWeekday1; // change Sunday from 0 to 7
+			iWeekday2 = (iWeekday2 == 0) ? 7 : iWeekday2;
+			if ((iWeekday1 > 5) && (iWeekday2 > 5)) iAdjust = 1; // adjustment if both days on weekend
+			iWeekday1 = (iWeekday1 > 5) ? 5 : iWeekday1; // only count weekdays
+			iWeekday2 = (iWeekday2 > 5) ? 5 : iWeekday2;
 
-			var minutes = (seconds / 60) | 0;
-			seconds -= minutes * 60;
+			// calculate differnece in weeks (1000mS * 60sec * 60min * 24hrs * 7 days = 604800000)
+			iWeeks = Math.floor((dDate2.getTime() - dDate1.getTime()) / 604800000)
 
-			var hours = (minutes / 60) | 0;
-			minutes -= hours * 60;
+			if (iWeekday1 <= iWeekday2) {
+				iDateDiff = (iWeeks * 5) + (iWeekday2 - iWeekday1)
+			} else {
+				iDateDiff = ((iWeeks + 1) * 5) - (iWeekday1 - iWeekday2)
+			}
 
-			var days = (hours / 24) | 0;
-			hours -= days * 24;
+			iDateDiff -= iAdjust // take into account both days on weekend
+			var diffObj = {};
 
-			var weeks = (days / 7) | 0;
-			days -= weeks * 7;
-			console.log("weeks:"+weeks+",days:"+days+",hours:"+hours+",minutes:"+minutes+",seconds:"+seconds);
-			document.getElementById('length').innerText = weeks + " weeks and " + days + " days";
-		}else{
-		  return err;
-		}
+			diffObj.days = iDateDiff + 1;
+			diffObj.weeks = (diffObj.days/5) | 0;
+			diffObj.days -= diffObj.weeks * 5;
+			return diffObj; // add 1 because dates are inclusive
+		};
+		
+		window.onChangeFn = function(index){
+			console.log('In here: ' + index);
+			var length = "length"+index;
+			//var index = $(this).attr('id').substr($(this).attr('id').length-1,$(this).attr('id').length);
+			var dt1 =  new Date($("[id^='schedule_endDate" +index+ "']").val()),dt2 = new Date($("[id^='schedule_startDate" +index+ "']").val());
+			if(dt1 && dt2){
+				var bizDates = calcBusinessDays(dt2,dt1);
+				document.getElementById(length).innerText = bizDates.weeks + " weeks and " + bizDates.days + " days";
+			} else {
+				return err;
+			}
+		};
+				
+		$('#filter').on('mouseover',function(){
+			$('#filterLoading').show();
+		});
 	});
-	
-	$('#filter').on('mouseover',function(){
-		$('#filterLoading').show();
-	});
-});
 			  
 $('.parent').click(function() {
     var subMenu = $(this).siblings('ul');

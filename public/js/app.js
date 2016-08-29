@@ -14,7 +14,8 @@
 	var projectDashboard = [];
 	var globalFliteredResource = [];
 	//Schedule Request Controller
-	app.controller('RequestController',function($http){
+	app.controller('RequestController',function($http,$scope){
+		$scope.count = 1;
 		this.request = {};
 		this.addRequest = function(){
 			var today = new Date();
@@ -80,13 +81,12 @@
 			switch(navItem){
 				case 'viewSchedule':
 					$scope.loading = true;
+					project.length = 0;
 					setTimeout(function(){
 						$http.get('/resources/schedule').success(function(data){
 							console.log('Getting resources in controller');
 							for(var i=0;i<data.length;i++){
-								//console.log(data.length);
 								project.push(data[i]);
-								//console.log(project.resource[i].DATEEndDate);
 							}
 							$scope.loading = false;
 						}).error(function(data) {
@@ -97,8 +97,10 @@
 					break;
 				case 'dashboard':
 					$scope.loading = true;
+					projectDashboard = [];
 					setTimeout(function(){
 						$http.get('/resources/dashboard').success(function(data){
+							
 							console.log('Getting dashboard in controller');
 							for(var i=0;i<data.length;i++){
 								projectDashboard.push(data[i]);
@@ -225,8 +227,35 @@
 		}
 	});
 	
+	//Directive that returns an element which adds buttons on click which show an alert on click
+	app.directive("addDiv", function($compile){   
+      return{
+        restrict: 'AE',
+        link: function(scope , element,attr){        
+           element.bind("click", function(e){
+		   scope.count++;
+           var container =   angular.element(document.querySelector("#newDateContainer"));
+           var childNode = $compile('<div class = "row"><div class="col-xs-3 form-group"><div class="date"><div class="input-group input-append date"><input type="text" placeholder="Start Date" class="form-control" id="schedule_startDate'+scope.count+'" name="date" required/><span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span></div></div></div><div class="col-xs-3 form-group"><div class="date"><div class="input-group input-append date"><input type="text" placeholder="End Date" class="form-control" id="schedule_endDate'+scope.count+'" name="date" required/><span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span></div></div></div></div>')(container);
+           container.append(childNode);
+           });
+        }
+    };
+   });
+   app.directive("removeDiv", function($compile){   
+      return{
+        restrict: 'AE',
+        link: function(scope , element,attr){
+           element.bind("click", function(e){
+				$('#schedule_endDate'+scope.count).closest('div[class^="row"]').remove();
+				scope.count--;
+           });
+        }
+    };
+   });
+   
 	//Resource Controller
 	app.controller('resourceController',function($scope, $uibModal, $log, $http){
+		
 		$scope.filteredResource = [];
 		$scope.resource = project;
 		$scope.orderByField = 'name';
